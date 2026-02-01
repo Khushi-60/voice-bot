@@ -104,11 +104,92 @@
 
   <script>
     const customBotAnswers = {
-      "What is your name?": "My name is Khushi.",
-      "Who are you?": "I’m EchoKhushi — a voice-based reflection of Khushi Kumari.",
-      "what is your current education?": "I am a masters student at IIT ISM Dhanbad in mathematics and computing.",
-      "Where do you study?": "I’m currently pursuing my masters at IIT ISM Dhanbad in Mathematics and Computing.",
-      "What motivates you?": "I’m motivated by growth — learning new things, solving meaningful problems, and seeing steady progress over time."
+     const customBotAnswers = {
+  "What is your name?":
+    "My name is Khushi.",
+
+  "Who are you?":
+    "I’m EchoKhushi — a voice-based reflection of Khushi Kumari.",
+
+  "what is your current education?":
+    "I am a masters student at IIT ISM Dhanbad in mathematics and computing.",
+
+  "Where do you study?":
+    "I’m currently pursuing my masters at IIT ISM Dhanbad in Mathematics and Computing.",
+
+  "What should we know about your life story?":
+    "I’ve always been curious about how things work — from ideas to systems to people. My journey has been shaped by learning fast, experimenting often, and being comfortable with uncertainty. I’ve grown most when I’ve challenged myself beyond what felt safe.",
+
+  "What motivates you?":
+    "I’m motivated by growth — learning new things, solving meaningful problems, and seeing steady progress over time.",
+
+  "What excites you the most?":
+    "Learning, building things from scratch, and working on problems where logic meets creativity.",
+
+  "What’s your #1 superpower?":
+    "My biggest strength is pattern recognition. I connect ideas quickly, learn fast, and adapt when things change.",
+
+  "What are your strengths?":
+    "I learn quickly, think logically, and stay calm under pressure. I’m also good at breaking complex problems into simpler parts.",
+
+  "What are the top 3 areas you’d like to grow in?":
+    "Leadership, clearer communication at scale, and going deeper rather than wider in complex problems.",
+
+  "Top 3 areas you want to grow in?":
+    "Leadership, clearer communication at scale, and going deeper rather than wider in complex problems.",
+
+  "What skills are you currently improving?":
+    "I’m actively improving my problem-solving depth, communication skills, and applied machine learning knowledge.",
+
+  "What misconception do your coworkers have about you?":
+    "That I’m quiet or reserved — when in reality I’m just observant. Once I understand the context, I’m very engaged.",
+
+  "A misconception coworkers have about you?":
+    "That I’m quiet or reserved — when in reality I’m just observant. Once I understand the context, I’m very engaged.",
+
+  "How do you handle challenges?":
+    "I stay calm, break the problem down, and focus on steady progress instead of quick fixes.",
+
+  "How do you push your boundaries and limits?":
+    "By deliberately putting myself in situations where I’m not the expert yet — and learning quickly from feedback.",
+
+  "How do you push your limits?":
+    "By deliberately putting myself in situations where I’m not the expert yet — and learning quickly from feedback.",
+
+  "How do you handle failure?":
+    "I treat failure as feedback. I reflect on what went wrong, adjust my approach, and move forward without overthinking.",
+
+  "How do you work in a team?":
+    "I’m collaborative and reliable. I listen carefully, contribute thoughtfully, and support shared goals.",
+
+  "What kind of teammate are you?":
+    "I’m dependable, open to feedback, and focused on solving problems rather than proving points.",
+
+  "How do you manage pressure?":
+    "I prioritize tasks, stay organized, and focus on what I can control instead of stressing about everything at once.",
+
+  "What do you enjoy working on?":
+    "Problems that involve logic, data, and real-world impact — especially when learning is involved.",
+
+  "Why do you enjoy technology?":
+    "Because it allows ideas to turn into real solutions that scale and create impact.",
+
+  "What does success mean to you?":
+    "Consistent growth, meaningful work, and staying true to my values while learning continuously.",
+
+  "What are your future goals?":
+    "To grow as a problem solver, build impactful systems, and keep learning across disciplines.",
+
+  "What do you want to be known for?":
+    "For being thoughtful, dependable, and someone who solves problems with clarity and purpose.",
+
+  "Why should we work with you?":
+    "Because I’m curious, disciplined, and committed to learning and delivering quality work.",
+
+  "What makes you different?":
+    "I combine analytical thinking with adaptability — I learn fast and adjust quickly to new challenges."
+};
+
     };
 
     const chatBox = document.getElementById('chatBox');
@@ -129,13 +210,41 @@
     }
 
     function speak(text) {
-      if (!('speechSynthesis' in window)) return;
-      const utter = new SpeechSynthesisUtterance(text);
-      utter.lang = 'en-US';
-      const voices = window.speechSynthesis.getVoices();
-      if (voices.length) utter.voice = voices.find(v => v.lang.startsWith('en')) || voices[0];
-      window.speechSynthesis.speak(utter);
-    }
+  if (!('speechSynthesis' in window)) return;
+
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'en-US';
+
+  // Adjust voice properties for a natural, professional tone
+  utter.rate = 1;      // speed (0.8 slow - 1.2 fast)
+  utter.pitch = 1.1;   // pitch (0.8 low - 1.5 high)
+  utter.volume = 1;    // volume (0 - 1)
+
+  // Get all available voices
+  let voices = window.speechSynthesis.getVoices();
+
+  // Function to pick a female voice
+  function getFemaleVoice() {
+    return voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('female')) || 
+           voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('zira')) ||
+           voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('susan')) ||
+           voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('samantha')) ||
+           voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('victoria')) ||
+           voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('alloy')) || 
+           voices.find(v => v.lang.startsWith('en')); // fallback
+  }
+
+  utter.voice = getFemaleVoice();
+
+  // If voices are not loaded yet, wait and retry
+  if (!voices.length) {
+    window.speechSynthesis.onvoiceschanged = () => speak(text);
+    return;
+  }
+
+  window.speechSynthesis.speak(utter);
+}
+
 
     function answerBot() {
       const question = userInput.value.trim();
@@ -179,3 +288,4 @@
   </script>
 </body>
 </html>
+
