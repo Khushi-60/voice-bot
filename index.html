@@ -4,127 +4,159 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EchoKhushi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family: Arial, sans-serif; background: #f4f4f4; text-align: center; padding: 2em; }
-    .container { background: #fff; border-radius: 10px; box-shadow: 0 2px 12px #0001; max-width: 400px; margin: 2em auto; padding: 2em; }
-    button { font-size: 1.1em; padding: 0.6em 1.2em; border-radius: 8px; border: none; background: #646cff; color: #fff; cursor: pointer; margin: 0.5em; }
-    button:disabled { background: #ccc; }
-    .response { background: #f6f6f6; border-radius: 8px; padding: 1em; margin: 1em 0; min-height: 2em; }
-    input[type=text] { width: 80%; padding: 0.5em; border-radius: 6px; border: 1px solid #ccc; margin-bottom: 1em; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1em;
+      margin: 0;
+    }
+    .container {
+      background: #fff;
+      border-radius: 15px;
+      max-width: 450px;
+      width: 100%;
+      padding: 2em;
+      box-shadow: 0 4px 25px rgba(0,0,0,0.15);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h2 {
+      margin-bottom: 1em;
+      color: #333;
+    }
+    .chat {
+      width: 100%;
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 1em;
+      margin-bottom: 1em;
+      background: #f9f9f9;
+    }
+    .message {
+      padding: 0.6em 1em;
+      margin: 0.4em 0;
+      border-radius: 15px;
+      max-width: 80%;
+      word-wrap: break-word;
+    }
+    .bot {
+      background: #646cff;
+      color: #fff;
+      align-self: flex-start;
+    }
+    .user {
+      background: #e0e0e0;
+      align-self: flex-end;
+    }
+    input[type=text] {
+      width: 80%;
+      padding: 0.6em;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 1em;
+    }
+    button {
+      font-size: 1em;
+      padding: 0.5em 1em;
+      border-radius: 8px;
+      border: none;
+      background: #646cff;
+      color: #fff;
+      cursor: pointer;
+      margin: 0.2em;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #4a53ff;
+    }
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    .footer {
+      margin-top: 1em;
+      color: #888;
+      font-size: 0.85em;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h2>EchoKhushi</h2>
-    <button id="speakBtn">🎤 Speak</button>
-    <button id="askBtn">💬 Ask</button>
-    <br><br>
-
+    <div class="chat" id="chatBox"></div>
     <input type="text" id="userInput" placeholder="Type or speak your question...">
-    <div class="response" id="botResponse"></div>
-    <div style="margin-top:1em; color:#888; font-size:0.9em;">No installation or API key required</div>
+    <div>
+      <button id="speakBtn">🎤 Speak</button>
+      <button id="askBtn">💬 Ask</button>
+    </div>
+    <div class="footer">No installation or API key required</div>
   </div>
+
   <script>
     const customBotAnswers = {
-  "What is your name?":
-    "My name is Khushi.",
+      "What is your name?": "My name is Khushi.",
+      "Who are you?": "I’m EchoKhushi — a voice-based reflection of Khushi Kumari.",
+      "what is your current education?": "I am a masters student at IIT ISM Dhanbad in mathematics and computing.",
+      "Where do you study?": "I’m currently pursuing my masters at IIT ISM Dhanbad in Mathematics and Computing.",
+      "What motivates you?": "I’m motivated by growth — learning new things, solving meaningful problems, and seeing steady progress over time."
+    };
 
-  "Who are you?":
-    "I’m EchoKhushi — a voice-based reflection of Khushi Kumari.",
-
-  "what is your current education?":
-    "I am a masters student at IIT ISM Dhanbad in mathematics and computing.",
-
-  "Where do you study?":
-    "I’m currently pursuing my masters at IIT ISM Dhanbad in Mathematics and Computing.",
-
-  "What should we know about your life story?":
-    "I’ve always been curious about how things work — from ideas to systems to people. My journey has been shaped by learning fast, experimenting often, and being comfortable with uncertainty. I’ve grown most when I’ve challenged myself beyond what felt safe.",
-
-  "What motivates you?":
-    "I’m motivated by growth — learning new things, solving meaningful problems, and seeing steady progress over time.",
-
-  "What excites you the most?":
-    "Learning, building things from scratch, and working on problems where logic meets creativity.",
-
-  "What’s your #1 superpower?":
-    "My biggest strength is pattern recognition. I connect ideas quickly, learn fast, and adapt when things change.",
-
-  "What are your strengths?":
-    "I learn quickly, think logically, and stay calm under pressure. I’m also good at breaking complex problems into simpler parts.",
-
-  "What are the top 3 areas you’d like to grow in?":
-    "Leadership, clearer communication at scale, and going deeper rather than wider in complex problems.",
-
-  "Top 3 areas you want to grow in?":
-    "Leadership, clearer communication at scale, and going deeper rather than wider in complex problems.",
-
-  "What skills are you currently improving?":
-    "I’m actively improving my problem-solving depth, communication skills, and applied machine learning knowledge.",
-
-  "What misconception do your coworkers have about you?":
-    "That I’m quiet or reserved — when in reality I’m just observant. Once I understand the context, I’m very engaged.",
-
-  "A misconception coworkers have about you?":
-    "That I’m quiet or reserved — when in reality I’m just observant. Once I understand the context, I’m very engaged.",
-
-  "How do you handle challenges?":
-    "I stay calm, break the problem down, and focus on steady progress instead of quick fixes.",
-
-  "How do you push your boundaries and limits?":
-    "By deliberately putting myself in situations where I’m not the expert yet — and learning quickly from feedback.",
-
-  "How do you push your limits?":
-    "By deliberately putting myself in situations where I’m not the expert yet — and learning quickly from feedback.",
-
-  "How do you handle failure?":
-    "I treat failure as feedback. I reflect on what went wrong, adjust my approach, and move forward without overthinking.",
-
-  "How do you work in a team?":
-    "I’m collaborative and reliable. I listen carefully, contribute thoughtfully, and support shared goals.",
-
-  "What kind of teammate are you?":
-    "I’m dependable, open to feedback, and focused on solving problems rather than proving points.",
-
-  "How do you manage pressure?":
-    "I prioritize tasks, stay organized, and focus on what I can control instead of stressing about everything at once.",
-
-  "What do you enjoy working on?":
-    "Problems that involve logic, data, and real-world impact — especially when learning is involved.",
-
-  "Why do you enjoy technology?":
-    "Because it allows ideas to turn into real solutions that scale and create impact.",
-
-  "What does success mean to you?":
-    "Consistent growth, meaningful work, and staying true to my values while learning continuously.",
-
-  "What are your future goals?":
-    "To grow as a problem solver, build impactful systems, and keep learning across disciplines.",
-
-  "What do you want to be known for?":
-    "For being thoughtful, dependable, and someone who solves problems with clarity and purpose.",
-
-  "Why should we work with you?":
-    "Because I’m curious, disciplined, and committed to learning and delivering quality work.",
-
-  "What makes you different?":
-    "I combine analytical thinking with adaptability — I learn fast and adjust quickly to new challenges."
-};
-
-
+    const chatBox = document.getElementById('chatBox');
+    const userInput = document.getElementById('userInput');
     const speakBtn = document.getElementById('speakBtn');
     const askBtn = document.getElementById('askBtn');
-    askBtn.onclick = function () {
-  answerBot();
-};
 
-    const userInput = document.getElementById('userInput');
-    const botResponse = document.getElementById('botResponse');
+    function normalize(str) {
+      return str.toLowerCase().replace(/[^a-z0-9 ]/gi, '').trim();
+    }
 
-    // Speech-to-Text
+    function addMessage(text, sender='bot') {
+      const msg = document.createElement('div');
+      msg.classList.add('message', sender);
+      msg.textContent = text;
+      chatBox.appendChild(msg);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function speak(text) {
+      if (!('speechSynthesis' in window)) return;
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = 'en-US';
+      const voices = window.speechSynthesis.getVoices();
+      if (voices.length) utter.voice = voices.find(v => v.lang.startsWith('en')) || voices[0];
+      window.speechSynthesis.speak(utter);
+    }
+
+    function answerBot() {
+      const question = userInput.value.trim();
+      if (!question) return;
+      addMessage(question, 'user');
+      userInput.value = '';
+      const normQ = normalize(question);
+      let foundKey = null;
+      for (const key in customBotAnswers) {
+        if (normalize(key) === normQ) { foundKey = key; break; }
+      }
+      const response = foundKey ? customBotAnswers[foundKey] : "Sorry, I can only answer specific questions for now.";
+      addMessage(response, 'bot');
+      speak(response);
+    }
+
+    askBtn.onclick = answerBot;
+
     speakBtn.onclick = function() {
       if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-        alert('Sorry, your browser does not support speech recognition.');
+        alert('Your browser does not support speech recognition.');
         return;
       }
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -139,72 +171,10 @@
       recognition.start();
     };
 
-    // Text-to-Speech with female voice selection
-    function speak(text) {
-      if (!('speechSynthesis' in window)) return;
-      const utter = new window.SpeechSynthesisUtterance(text);
-      utter.lang = 'en-US';
-      // Try to select a female voice
-      const voices = window.speechSynthesis.getVoices();
-      // Prefer en-US female voices, fallback to any female
-      let femaleVoice = voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('female'))
-        || voices.find(v => v.lang.startsWith('en') && v.gender === 'female')
-        || voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('woman'))
-        || voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('zira'))
-        || voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('susan'))
-        || voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('samantha'))
-        || voices.find(v => v.lang.startsWith('en'));
-      if (femaleVoice) utter.voice = femaleVoice;
-      // If voices are not loaded yet, wait and retry
-      if (!voices.length) {
-        window.speechSynthesis.onvoiceschanged = () => speak(text);
-        return;
-      }
-      window.speechSynthesis.speak(utter);
-    }
-
-    // Bot logic
-    // Helper: normalize string for matching (lowercase, remove punctuation)
-    function normalize(str) {
-      return str.toLowerCase().replace(/[^a-z0-9 ]/gi, '').replace(/\s+/g, ' ').trim();
-    }
-
-    function answerBot() {
-      const question = userInput.value.trim();
-      if (!question) return;
-      // Try to match normalized question
-      const normQ = normalize(question);
-      let foundKey = null;
-      for (const key in customBotAnswers) {
-        if (normalize(key) === normQ) {
-          foundKey = key;
-          break;
-        }
-      }
-      if (foundKey) {
-        botResponse.textContent = customBotAnswers[foundKey];
-        speak(customBotAnswers[foundKey]);
-      } else {
-        botResponse.textContent = "Sorry, I can only answer specific questions for now.";
-        speak(botResponse.textContent);
-      }
-    }
-    // Welcoming message on page load
-    window.addEventListener('DOMContentLoaded', function() {
-      const welcome = "Hello! I'm your voice bot. Ask me a question by speaking or typing, and I'll answer right away.";
-      botResponse.textContent = welcome;
-      // Wait for voices to be loaded before speaking welcome, and only speak once
-      function speakWelcomeOnce() {
-        if (!speakWelcomeOnce.done) {
-          speakWelcomeOnce.done = true;
-          speak(welcome);
-        }
-      }
-      if (window.speechSynthesis.getVoices().length) {
-        speakWelcomeOnce();
-      } else {
-        window.speechSynthesis.onvoiceschanged = speakWelcomeOnce;
-      }
+    window.addEventListener('DOMContentLoaded', () => {
+      const welcome = "Hello! I'm your voice bot. Ask me a question by speaking or typing!";
+      addMessage(welcome, 'bot');
+      speak(welcome);
     });
   </script>
 </body>
