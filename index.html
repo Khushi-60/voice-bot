@@ -3,124 +3,476 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EchoKhushi</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <title>EchoKhushi - Voice AI Assistant</title>
+  <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --primary: #2d3561;
+      --primary-light: #4a5584;
+      --accent: #e85d75;
+      --accent-hover: #d14563;
+      --bg-main: #f8f6f4;
+      --bg-card: #ffffff;
+      --text-dark: #1a1a2e;
+      --text-muted: #6b7280;
+      --border: #e5e1da;
+      --shadow: rgba(45, 53, 97, 0.08);
+      --shadow-hover: rgba(45, 53, 97, 0.15);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #667eea, #764ba2);
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg-main);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 1em;
-      margin: 0;
+      padding: 2rem 1rem;
+      color: var(--text-dark);
+      position: relative;
+      overflow-x: hidden;
     }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: -50%;
+      right: -20%;
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, rgba(232, 93, 117, 0.08) 0%, transparent 70%);
+      border-radius: 50%;
+      z-index: 0;
+      animation: float 20s ease-in-out infinite;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -30%;
+      left: -10%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(45, 53, 97, 0.06) 0%, transparent 70%);
+      border-radius: 50%;
+      z-index: 0;
+      animation: float 25s ease-in-out infinite reverse;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(30px, 30px) scale(1.05); }
+    }
+
     .container {
-      background: #fff;
-      border-radius: 15px;
-      max-width: 450px;
+      position: relative;
+      z-index: 1;
+      background: var(--bg-card);
+      border-radius: 24px;
+      max-width: 580px;
       width: 100%;
-      padding: 2em;
-      box-shadow: 0 4px 25px rgba(0,0,0,0.15);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      padding: 3rem 2.5rem;
+      box-shadow: 0 20px 60px var(--shadow);
+      border: 1px solid var(--border);
+      animation: slideUp 0.6s ease-out;
     }
-    h2 {
-      margin-bottom: 1em;
-      color: #333;
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
-    .chat {
-      width: 100%;
-      max-height: 300px;
-      overflow-y: auto;
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      padding: 1em;
-      margin-bottom: 1em;
-      background: #f9f9f9;
-    }
-    .message {
-      padding: 0.6em 1em;
-      margin: 0.4em 0;
-      border-radius: 15px;
-      max-width: 80%;
-      word-wrap: break-word;
-    }
-    .bot {
-      background: #646cff;
-      color: #fff;
-      align-self: flex-start;
-    }
-    .user {
-      background: #e0e0e0;
-      align-self: flex-end;
-    }
-    input[type=text] {
-      width: 80%;
-      padding: 0.6em;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      margin-bottom: 1em;
-    }
-    button {
-      font-size: 1em;
-      padding: 0.5em 1em;
-      border-radius: 8px;
-      border: none;
-      background: #646cff;
-      color: #fff;
-      cursor: pointer;
-      margin: 0.2em;
-      transition: background 0.3s ease;
-    }
-    button:hover {
-      background: #4a53ff;
-    }
-    button:disabled {
-      background: #ccc;
-      cursor: not-allowed;
-    }
-    .footer {
-      margin-top: 1em;
-      color: #888;
-      font-size: 0.85em;
+
+    .header {
       text-align: center;
+      margin-bottom: 2.5rem;
+      animation: fadeIn 0.8s ease-out 0.2s both;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .header h1 {
+      font-family: 'Crimson Pro', serif;
+      font-size: 2.75rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    .header .tagline {
+      font-size: 1rem;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .status-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(232, 93, 117, 0.1);
+      padding: 0.5rem 1rem;
+      border-radius: 50px;
+      margin-top: 1rem;
+      font-size: 0.875rem;
+      color: var(--accent);
+      animation: fadeIn 0.8s ease-out 0.4s both;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.2); }
+    }
+
+    .chat-container {
+      background: linear-gradient(to bottom, #fafaf9, #ffffff);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      max-height: 380px;
+      overflow-y: auto;
+      margin-bottom: 1.5rem;
+      animation: fadeIn 0.8s ease-out 0.6s both;
+    }
+
+    .chat-container::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .chat-container::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .chat-container::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 10px;
+    }
+
+    .chat-container::-webkit-scrollbar-thumb:hover {
+      background: var(--text-muted);
+    }
+
+    .message {
+      padding: 1rem 1.25rem;
+      margin: 0.75rem 0;
+      border-radius: 16px;
+      max-width: 85%;
+      word-wrap: break-word;
+      line-height: 1.6;
+      animation: messageSlide 0.3s ease-out;
+      position: relative;
+    }
+
+    @keyframes messageSlide {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .message.bot {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: #ffffff;
+      margin-right: auto;
+      border-bottom-left-radius: 4px;
+      box-shadow: 0 4px 12px rgba(45, 53, 97, 0.15);
+    }
+
+    .message.user {
+      background: #f3f4f6;
+      color: var(--text-dark);
+      margin-left: auto;
+      border-bottom-right-radius: 4px;
+      border: 1px solid var(--border);
+    }
+
+    .input-section {
+      animation: fadeIn 0.8s ease-out 0.8s both;
+    }
+
+    .input-wrapper {
+      position: relative;
+      margin-bottom: 1rem;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 1rem 1.25rem;
+      border-radius: 12px;
+      border: 2px solid var(--border);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background: #ffffff;
+      color: var(--text-dark);
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(232, 93, 117, 0.1);
+    }
+
+    input[type="text"]::placeholder {
+      color: var(--text-muted);
+    }
+
+    .button-group {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    button {
+      flex: 1;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s ease, height 0.6s ease;
+    }
+
+    button:active::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    #speakBtn {
+      background: var(--accent);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(232, 93, 117, 0.25);
+    }
+
+    #speakBtn:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(232, 93, 117, 0.35);
+    }
+
+    #speakBtn.listening {
+      animation: listening 1.5s ease-in-out infinite;
+    }
+
+    @keyframes listening {
+      0%, 100% { box-shadow: 0 4px 12px rgba(232, 93, 117, 0.25); }
+      50% { box-shadow: 0 4px 20px rgba(232, 93, 117, 0.5); }
+    }
+
+    #askBtn {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 4px 12px var(--shadow);
+    }
+
+    #askBtn:hover {
+      background: var(--primary-light);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px var(--shadow-hover);
+    }
+
+    button:disabled {
+      background: #d1d5db;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    button:disabled:hover {
+      transform: none;
+    }
+
+    .footer {
+      margin-top: 1.5rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      animation: fadeIn 0.8s ease-out 1s both;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .footer-link:hover {
+      color: var(--accent);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: var(--text-muted);
+    }
+
+    .empty-state svg {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 1rem;
+      opacity: 0.5;
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 2rem 1.5rem;
+      }
+
+      .header h1 {
+        font-size: 2.25rem;
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>EchoKhushi</h2>
-    <div class="chat" id="chatBox"></div>
-    <input type="text" id="userInput" placeholder="Type or speak your question...">
-    <div>
-      <button id="speakBtn">🎤 Speak</button>
-      <button id="askBtn">💬 Ask</button>
+    <div class="header">
+      <h1>EchoKhushi</h1>
+      <p class="tagline">Your intelligent voice assistant</p>
+      <div class="status-indicator">
+        <span class="status-dot"></span>
+        <span>Ready to assist</span>
+      </div>
     </div>
-    <div class="footer">No installation or API key required</div>
+
+    <div class="chat-container" id="chatBox">
+      <div class="empty-state">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+        <p>Start a conversation by typing or speaking</p>
+      </div>
+    </div>
+
+    <div class="input-section">
+      <div class="input-wrapper">
+        <input type="text" id="userInput" placeholder="Ask me anything..." autocomplete="off">
+      </div>
+      <div class="button-group">
+        <button id="speakBtn">
+          <span>🎤</span>
+          <span id="speakBtnText">Speak</span>
+        </button>
+        <button id="askBtn">
+          <span>💬</span>
+          <span>Send</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>No installation or API key required</p>
+      <div class="footer-links">
+        <span class="footer-link">🔒 Private & Secure</span>
+        <span class="footer-link">⚡ Instant Responses</span>
+      </div>
+    </div>
   </div>
 
   <script>
+    // Expanded knowledge base with more professional responses
     const customBotAnswers = {
-      "What is your name?": "My name is Khushi.",
-      "Who are you?": "I’m EchoKhushi — a voice-based reflection of Khushi Kumari.",
-      "what is your current education?": "I am a masters student at IIT ISM Dhanbad in mathematics and computing.",
-      "Where do you study?": "I’m currently pursuing my masters at IIT ISM Dhanbad in Mathematics and Computing.",
-      "What motivates you?": "I’m motivated by growth — learning new things, solving meaningful problems, and seeing steady progress over time.",
-      "What excites you the most?": "Learning, building things from scratch, and working on problems where logic meets creativity.",
-      "What’s your #1 superpower?": "My biggest strength is pattern recognition. I connect ideas quickly, learn fast, and adapt when things change.",
-      "What are your strengths?": "I learn quickly, think logically, and stay calm under pressure. I’m also good at breaking complex problems into simpler parts."
-      // Add the rest of your questions here...
+      "what is your name": "My name is Khushi. I'm here to help answer your questions!",
+      "who are you": "I'm EchoKhushi — a voice-based AI reflection of Khushi Kumari, designed to provide helpful information about her background and expertise.",
+      "what is your current education": "I am currently pursuing a Master's degree at IIT ISM Dhanbad in Mathematics and Computing.",
+      "where do you study": "I'm studying at IIT ISM Dhanbad, one of India's premier technical institutions, pursuing my Master's in Mathematics and Computing.",
+      "what motivates you": "I'm motivated by continuous growth — learning new concepts, solving meaningful problems, and seeing tangible progress over time. The intersection of mathematics and computing is particularly exciting.",
+      "what excites you the most": "I'm most excited by learning new things, building solutions from scratch, and working on problems where logical thinking meets creative problem-solving.",
+      "what is your superpower": "My biggest strength is pattern recognition. I can quickly connect disparate ideas, learn efficiently, and adapt when circumstances change.",
+      "what are your strengths": "I excel at rapid learning, logical thinking, and maintaining composure under pressure. I'm particularly skilled at breaking down complex problems into manageable components.",
+      "what are your skills": "My primary skills include mathematical modeling, algorithm design, programming, data analysis, and problem-solving. I'm proficient in Python, R, and various computational tools.",
+      "what is your goal": "My goal is to leverage my expertise in mathematics and computing to solve real-world problems, contribute to innovative research, and make a positive impact through technology.",
+      "what do you like to do": "I enjoy solving challenging mathematical problems, coding creative solutions, researching new technologies, and continuously expanding my knowledge in AI and machine learning.",
+      "tell me about yourself": "I'm Khushi Kumari, a Master's student at IIT ISM Dhanbad specializing in Mathematics and Computing. I'm passionate about using analytical thinking and technology to solve complex problems.",
+      "what are your hobbies": "I enjoy algorithmic problem-solving, reading about emerging technologies, working on coding projects, and exploring the latest developments in artificial intelligence and data science.",
+      "what is your background": "I have a strong foundation in mathematics and computer science, currently advancing my expertise through my Master's program at IIT ISM Dhanbad.",
+      "hello": "Hello! I'm EchoKhushi. How can I assist you today?",
+      "hi": "Hi there! Feel free to ask me anything about Khushi's background, education, or interests.",
+      "help": "You can ask me questions about Khushi's education, skills, interests, or career goals. Try asking 'What are your strengths?' or 'What motivates you?'"
     };
 
+    let isEmptyState = true;
+
     function normalize(str) {
-      return str.toLowerCase().replace(/[^a-z0-9 ]/gi, '').trim();
+      return str.toLowerCase()
+        .replace(/[^a-z0-9 ]/gi, '')
+        .trim()
+        .replace(/\s+/g, ' ');
     }
 
-    function addMessage(text, sender='bot') {
+    function addMessage(text, sender = 'bot') {
       const chatBox = document.getElementById('chatBox');
+      
+      if (isEmptyState) {
+        chatBox.innerHTML = '';
+        isEmptyState = false;
+      }
+      
       const msg = document.createElement('div');
       msg.classList.add('message', sender);
       msg.textContent = text;
@@ -129,80 +481,162 @@
     }
 
     function speak(text) {
-      if (!('speechSynthesis' in window)) return;
-
-      const utter = new SpeechSynthesisUtterance(text);
-      utter.lang = 'en-US';
-      utter.rate = 1;
-      utter.pitch = 1.1;
-      utter.volume = 1;
-
-      function selectFemaleVoice() {
-        const voices = window.speechSynthesis.getVoices();
-        return voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('female')) ||
-               voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('zira')) ||
-               voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('susan')) ||
-               voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('samantha')) ||
-               voices.find(v => v.lang.startsWith('en'));
-      }
-
-      const voice = selectFemaleVoice();
-
-      if (!voice) {
-        // Voices not loaded yet, wait and retry
-        window.speechSynthesis.onvoiceschanged = () => speak(text);
+      if (!('speechSynthesis' in window)) {
+        console.warn('Speech synthesis not supported');
         return;
       }
 
-      utter.voice = voice;
-      window.speechSynthesis.speak(utter);
+      // Cancel any ongoing speech
+      window.speechSynthesis.cancel();
+
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = 'en-US';
+      utter.rate = 0.95;
+      utter.pitch = 1.2; // Higher pitch for more feminine voice
+      utter.volume = 1;
+
+      function selectBestFemaleVoice() {
+        const voices = window.speechSynthesis.getVoices();
+        
+        // Prioritize natural-sounding female voices
+        const femaleVoiceKeywords = [
+          'female', 'woman', 'samantha', 'victoria', 'karen', 'moira',
+          'tessa', 'fiona', 'zira', 'susan', 'hazel', 'kate', 'serena'
+        ];
+        
+        for (const keyword of femaleVoiceKeywords) {
+          const voice = voices.find(v => 
+            v.lang.startsWith('en') && 
+            v.name.toLowerCase().includes(keyword)
+          );
+          if (voice) return voice;
+        }
+        
+        // Fallback to any English voice
+        return voices.find(v => v.lang.startsWith('en')) || voices[0];
+      }
+
+      const voices = window.speechSynthesis.getVoices();
+      
+      if (!voices.length) {
+        window.speechSynthesis.onvoiceschanged = () => {
+          const voice = selectBestFemaleVoice();
+          if (voice) {
+            utter.voice = voice;
+            window.speechSynthesis.speak(utter);
+          }
+        };
+      } else {
+        const voice = selectBestFemaleVoice();
+        if (voice) {
+          utter.voice = voice;
+          window.speechSynthesis.speak(utter);
+        }
+      }
+    }
+
+    function findBestMatch(userQuestion) {
+      const normQ = normalize(userQuestion);
+      
+      // Exact match
+      for (const key in customBotAnswers) {
+        if (normalize(key) === normQ) {
+          return customBotAnswers[key];
+        }
+      }
+      
+      // Partial match (check if question contains key)
+      for (const key in customBotAnswers) {
+        const normKey = normalize(key);
+        if (normQ.includes(normKey) || normKey.includes(normQ)) {
+          return customBotAnswers[key];
+        }
+      }
+      
+      // No match found
+      return "I appreciate your question! I'm currently programmed to answer specific questions about Khushi's education, skills, and background. Try asking about her strengths, education, or what motivates her.";
     }
 
     function answerBot() {
       const userInput = document.getElementById('userInput');
       const question = userInput.value.trim();
+      
       if (!question) return;
+      
       addMessage(question, 'user');
       userInput.value = '';
-      const normQ = normalize(question);
-      let foundKey = null;
-      for (const key in customBotAnswers) {
-        if (normalize(key) === normQ) { foundKey = key; break; }
-      }
-      const response = foundKey ? customBotAnswers[foundKey] : "Sorry, I can only answer specific questions for now.";
-      addMessage(response, 'bot');
-      speak(response);
+      
+      // Simulate thinking delay for better UX
+      setTimeout(() => {
+        const response = findBestMatch(question);
+        addMessage(response, 'bot');
+        speak(response);
+      }, 300);
     }
+
+    // Send message on Enter key
+    document.getElementById('userInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        answerBot();
+      }
+    });
 
     document.getElementById('askBtn').onclick = answerBot;
 
     document.getElementById('speakBtn').onclick = function() {
       if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-        alert('Your browser does not support speech recognition.');
+        addMessage("Sorry, speech recognition is not supported in your browser. Please try typing your question instead.", 'bot');
         return;
       }
+
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       const recognition = new SpeechRecognition();
+      
       recognition.lang = 'en-US';
       recognition.interimResults = false;
       recognition.maxAlternatives = 1;
+
+      const speakBtn = document.getElementById('speakBtn');
+      const speakBtnText = document.getElementById('speakBtnText');
+      
+      speakBtn.classList.add('listening');
+      speakBtn.disabled = true;
+      speakBtnText.textContent = 'Listening...';
+
       recognition.onresult = function(event) {
-        document.getElementById('userInput').value = event.results[0][0].transcript;
+        const transcript = event.results[0][0].transcript;
+        document.getElementById('userInput').value = transcript;
         answerBot();
       };
-      recognition.start();
-    }
 
-    // Welcome message
+      recognition.onerror = function(event) {
+        console.error('Speech recognition error:', event.error);
+        addMessage("Sorry, I couldn't hear you clearly. Please try again or type your question.", 'bot');
+      };
+
+      recognition.onend = function() {
+        speakBtn.classList.remove('listening');
+        speakBtn.disabled = false;
+        speakBtnText.textContent = 'Speak';
+      };
+
+      recognition.start();
+    };
+
+    // Welcome message on load
     window.addEventListener('DOMContentLoaded', () => {
-      const welcome = "Hello! I'm your voice bot. Ask me a question by speaking or typing!";
-      addMessage(welcome, 'bot');
-      const voices = window.speechSynthesis.getVoices();
-      if (!voices.length) {
-        window.speechSynthesis.onvoiceschanged = () => speak(welcome);
-      } else {
-        speak(welcome);
-      }
+      setTimeout(() => {
+        const welcome = "Hello! I'm EchoKhushi, your voice assistant. I can answer questions about Khushi's education, skills, and interests. Feel free to ask me anything, either by typing or using the microphone!";
+        addMessage(welcome, 'bot');
+        
+        // Load voices and speak welcome message
+        const voices = window.speechSynthesis.getVoices();
+        if (!voices.length) {
+          window.speechSynthesis.onvoiceschanged = () => speak(welcome);
+        } else {
+          speak(welcome);
+        }
+      }, 500);
     });
   </script>
 </body>
