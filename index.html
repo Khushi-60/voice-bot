@@ -435,26 +435,215 @@
   </div>
 
   <script>
-    // Expanded knowledge base with more professional responses
-    const customBotAnswers = {
-      "what is your name": "My name is Khushi. I'm here to help answer your questions!",
-      "who are you": "I'm EchoKhushi — a voice-based AI reflection of Khushi Kumari, designed to provide helpful information about her background and expertise.",
-      "what is your current education": "I am currently pursuing a Master's degree at IIT ISM Dhanbad in Mathematics and Computing.",
-      "where do you study": "I'm studying at IIT ISM Dhanbad, one of India's premier technical institutions, pursuing my Master's in Mathematics and Computing.",
-      "what motivates you": "I'm motivated by continuous growth — learning new concepts, solving meaningful problems, and seeing tangible progress over time. The intersection of mathematics and computing is particularly exciting.",
-      "what excites you the most": "I'm most excited by learning new things, building solutions from scratch, and working on problems where logical thinking meets creative problem-solving.",
-      "what is your superpower": "My biggest strength is pattern recognition. I can quickly connect disparate ideas, learn efficiently, and adapt when circumstances change.",
-      "what are your strengths": "I excel at rapid learning, logical thinking, and maintaining composure under pressure. I'm particularly skilled at breaking down complex problems into manageable components.",
-      "what are your skills": "My primary skills include mathematical modeling, algorithm design, programming, data analysis, and problem-solving. I'm proficient in Python, R, and various computational tools.",
-      "what is your goal": "My goal is to leverage my expertise in mathematics and computing to solve real-world problems, contribute to innovative research, and make a positive impact through technology.",
-      "what do you like to do": "I enjoy solving challenging mathematical problems, coding creative solutions, researching new technologies, and continuously expanding my knowledge in AI and machine learning.",
-      "tell me about yourself": "I'm Khushi Kumari, a Master's student at IIT ISM Dhanbad specializing in Mathematics and Computing. I'm passionate about using analytical thinking and technology to solve complex problems.",
-      "what are your hobbies": "I enjoy algorithmic problem-solving, reading about emerging technologies, working on coding projects, and exploring the latest developments in artificial intelligence and data science.",
-      "what is your background": "I have a strong foundation in mathematics and computer science, currently advancing my expertise through my Master's program at IIT ISM Dhanbad.",
-      "hello": "Hello! I'm EchoKhushi. How can I assist you today?",
-      "hi": "Hi there! Feel free to ask me anything about Khushi's background, education, or interests.",
-      "help": "You can ask me questions about Khushi's education, skills, interests, or career goals. Try asking 'What are your strengths?' or 'What motivates you?'"
-    };
+    // Merged knowledge base with both exact questions and flexible keywords
+    const knowledgeBase = [
+      {
+        exactQuestions: [
+          "what is your name",
+          "whats your name",
+          "your name"
+        ],
+        keywords: ['name', 'called', 'introduce'],
+        answer: "My name is Khushi. I'm here to help answer your questions!",
+        priority: 10
+      },
+      {
+        exactQuestions: [
+          "who are you",
+          "what are you",
+          "tell me about yourself"
+        ],
+        keywords: ['identity', 'about you', 'who is this'],
+        answer: "I'm EchoKhushi — a voice-based AI reflection of Khushi Kumari, designed to provide helpful information about her background and expertise.",
+        priority: 10
+      },
+      {
+        exactQuestions: [
+          "what is your current education",
+          "what do you study",
+          "where do you study",
+          "what are you studying"
+        ],
+        keywords: ['education', 'study', 'studying', 'degree', 'masters', 'student', 'university', 'college', 'iit', 'school', 'course'],
+        answer: "I am currently pursuing a Master's degree at IIT ISM Dhanbad in Mathematics and Computing, one of India's premier technical institutions.",
+        priority: 10
+      },
+      {
+        exactQuestions: [
+          "where is your college",
+          "where is your university",
+          "which iit"
+        ],
+        keywords: ['location', 'place', 'where', 'campus', 'dhanbad', 'jharkhand'],
+        answer: "I'm studying at IIT ISM Dhanbad, located in Jharkhand, India. It's one of the country's top engineering and science institutions.",
+        priority: 9
+      },
+      {
+        exactQuestions: [
+          "what motivates you",
+          "why do you do this",
+          "what drives you"
+        ],
+        keywords: ['motivate', 'motivation', 'drive', 'inspire', 'passion', 'why'],
+        answer: "I'm motivated by continuous growth — learning new concepts, solving meaningful problems, and seeing tangible progress over time. The intersection of mathematics and computing is particularly exciting to me.",
+        priority: 9
+      },
+      {
+        exactQuestions: [
+          "what excites you the most",
+          "what excites you",
+          "what do you love"
+        ],
+        keywords: ['excite', 'exciting', 'interest', 'passionate', 'love', 'enjoy', 'like'],
+        answer: "I'm most excited by learning new things, building solutions from scratch, and working on problems where logical thinking meets creative problem-solving. The challenge of turning abstract concepts into practical solutions really energizes me.",
+        priority: 9
+      },
+      {
+        exactQuestions: [
+          "what is your superpower",
+          "whats your superpower",
+          "what are your strengths",
+          "what are you good at"
+        ],
+        keywords: ['superpower', 'strength', 'good at', 'best', 'talent', 'forte', 'excellent', 'strong'],
+        answer: "My biggest strength is pattern recognition. I can quickly connect disparate ideas, learn efficiently, and adapt when circumstances change. I also excel at logical thinking and maintaining composure under pressure.",
+        priority: 10
+      },
+      {
+        exactQuestions: [
+          "what are your skills",
+          "what can you do",
+          "tell me your skills"
+        ],
+        keywords: ['skill', 'ability', 'capable', 'proficient', 'know', 'programming', 'code', 'technical', 'expertise'],
+        answer: "My primary skills include mathematical modeling, algorithm design, programming, data analysis, and problem-solving. I'm proficient in Python, R, and various computational tools used in data science and machine learning.",
+        priority: 10
+      },
+      {
+        exactQuestions: [
+          "what is your goal",
+          "what are your goals",
+          "what do you want to do",
+          "future plans"
+        ],
+        keywords: ['goal', 'aim', 'objective', 'future', 'plan', 'aspiration', 'career', 'ambition', 'want'],
+        answer: "My goal is to leverage my expertise in mathematics and computing to solve real-world problems, contribute to innovative research, and make a positive impact through technology. I aim to work on meaningful projects that bridge theory and practice.",
+        priority: 9
+      },
+      {
+        exactQuestions: [
+          "what do you like to do",
+          "what are your hobbies",
+          "tell me your hobbies"
+        ],
+        keywords: ['hobby', 'hobbies', 'free time', 'fun', 'activity', 'recreation', 'leisure'],
+        answer: "I enjoy algorithmic problem-solving, reading about emerging technologies, working on coding projects, and exploring the latest developments in artificial intelligence and data science. I find joy in both theoretical and practical challenges.",
+        priority: 8
+      },
+      {
+        exactQuestions: [
+          "what is your background",
+          "tell me your background",
+          "your history"
+        ],
+        keywords: ['background', 'history', 'experience', 'past', 'journey', 'story'],
+        answer: "I have a strong foundation in mathematics and computer science, currently advancing my expertise through my Master's program at IIT ISM Dhanbad. My journey has been focused on building deep analytical and computational skills.",
+        priority: 8
+      },
+      {
+        exactQuestions: [
+          "what are you working on",
+          "tell me about your research",
+          "what is your project"
+        ],
+        keywords: ['research', 'thesis', 'project', 'work', 'working on', 'dissertation'],
+        answer: "I'm currently focused on my Master's studies in Mathematics and Computing, working on projects that combine mathematical theory with practical computing applications. I'm particularly interested in areas like machine learning and data analysis.",
+        priority: 8
+      },
+      {
+        exactQuestions: [
+          "do you know mathematics",
+          "are you good at math",
+          "tell me about mathematics"
+        ],
+        keywords: ['mathematics', 'math', 'mathematical', 'algebra', 'calculus', 'geometry'],
+        answer: "Mathematics is a core part of my academic focus. I'm pursuing a Master's in Mathematics and Computing, which allows me to explore both pure mathematical concepts and their computational applications.",
+        priority: 9
+      },
+      {
+        exactQuestions: [
+          "do you know programming",
+          "can you code",
+          "tell me about computing"
+        ],
+        keywords: ['computing', 'computer', 'cs', 'computer science', 'technology', 'tech'],
+        answer: "Computing is integral to my studies and interests. I'm specializing in Mathematics and Computing, which gives me a unique perspective on how mathematical principles can be applied to solve computational problems.",
+        priority: 9
+      },
+      {
+        exactQuestions: [
+          "do you know ai",
+          "tell me about artificial intelligence",
+          "what about machine learning"
+        ],
+        keywords: ['ai', 'artificial intelligence', 'machine learning', 'ml', 'deep learning', 'neural', 'data science'],
+        answer: "I'm very interested in artificial intelligence and machine learning. These fields perfectly combine my mathematical background with practical computing, and I'm continuously learning about the latest developments in this exciting area.",
+        priority: 9
+      },
+      {
+        exactQuestions: [
+          "do you know python",
+          "can you program in python",
+          "are you good at python"
+        ],
+        keywords: ['python', 'programming language', 'coding language', 'language'],
+        answer: "Yes, I'm proficient in Python! It's one of my primary programming languages, and I use it extensively for data analysis, algorithm implementation, and machine learning projects.",
+        priority: 8
+      },
+      {
+        exactQuestions: [
+          "do you do data analysis",
+          "are you good at data",
+          "tell me about data"
+        ],
+        keywords: ['data', 'analytics', 'analysis', 'statistics', 'statistical', 'dataset'],
+        answer: "Data analysis is one of my key skills. With my background in mathematics and computing, I enjoy working with data to extract insights, build models, and solve real-world problems using statistical and computational methods.",
+        priority: 9
+      },
+      {
+        exactQuestions: [
+          "hello",
+          "hi",
+          "hey",
+          "good morning",
+          "good afternoon",
+          "good evening"
+        ],
+        keywords: ['hello', 'hi', 'hey', 'greetings'],
+        answer: "Hello! I'm EchoKhushi. How can I assist you today? Feel free to ask me anything about Khushi's background, education, skills, or interests!",
+        priority: 5
+      },
+      {
+        exactQuestions: [
+          "help",
+          "what can you do",
+          "how can you help"
+        ],
+        keywords: ['help', 'assist', 'support', 'guide', 'capability'],
+        answer: "I can answer questions about Khushi's education, skills, interests, career goals, and background. Try asking about her strengths, what motivates her, her technical skills, or her studies at IIT ISM Dhanbad!",
+        priority: 6
+      },
+      {
+        exactQuestions: [
+          "thank you",
+          "thanks",
+          "thank you so much"
+        ],
+        keywords: ['thank', 'thanks', 'appreciate', 'grateful'],
+        answer: "You're very welcome! If you have any more questions about Khushi's background or interests, feel free to ask anytime!",
+        priority: 5
+      }
+    ];
 
     let isEmptyState = true;
 
@@ -537,24 +726,78 @@
 
     function findBestMatch(userQuestion) {
       const normQ = normalize(userQuestion);
+      const questionWords = normQ.split(' ');
       
-      // Exact match
-      for (const key in customBotAnswers) {
-        if (normalize(key) === normQ) {
-          return customBotAnswers[key];
+      // STEP 1: Check for exact question match first (highest priority)
+      for (const entry of knowledgeBase) {
+        if (entry.exactQuestions) {
+          for (const exactQ of entry.exactQuestions) {
+            if (normalize(exactQ) === normQ) {
+              return entry.answer; // Perfect match!
+            }
+          }
         }
       }
       
-      // Partial match (check if question contains key)
-      for (const key in customBotAnswers) {
-        const normKey = normalize(key);
-        if (normQ.includes(normKey) || normKey.includes(normQ)) {
-          return customBotAnswers[key];
+      // STEP 2: If no exact match, use keyword scoring
+      let bestMatch = null;
+      let highestScore = 0;
+      
+      for (const entry of knowledgeBase) {
+        let score = 0;
+        
+        // Check exact questions for partial matches
+        if (entry.exactQuestions) {
+          for (const exactQ of entry.exactQuestions) {
+            const normExact = normalize(exactQ);
+            if (normQ.includes(normExact) || normExact.includes(normQ)) {
+              score += 15; // High score for partial exact match
+            }
+          }
+        }
+        
+        // Check keywords
+        if (entry.keywords) {
+          for (const keyword of entry.keywords) {
+            const normKeyword = normalize(keyword);
+            
+            // Exact phrase match
+            if (normQ.includes(normKeyword)) {
+              score += 10;
+            }
+            
+            // Individual word matches
+            const keywordWords = normKeyword.split(' ');
+            for (const kw of keywordWords) {
+              if (kw.length > 2) { // Ignore very short words
+                for (const qw of questionWords) {
+                  if (qw === kw) {
+                    score += 5;
+                  } else if (qw.includes(kw) || kw.includes(qw)) {
+                    score += 3;
+                  }
+                }
+              }
+            }
+          }
+        }
+        
+        // Apply priority multiplier
+        score = score * (entry.priority / 10);
+        
+        if (score > highestScore) {
+          highestScore = score;
+          bestMatch = entry;
         }
       }
       
-      // No match found
-      return "I appreciate your question! I'm currently programmed to answer specific questions about Khushi's education, skills, and background. Try asking about her strengths, education, or what motivates her.";
+      // If we found a good match (score > 5), return it
+      if (bestMatch && highestScore > 5) {
+        return bestMatch.answer;
+      }
+      
+      // Default response if no good match found
+      return "I appreciate your question! I'm currently programmed to answer questions about Khushi's education, skills, interests, and background. Try asking about her strengths, what she studies, what motivates her, or her technical skills!";
     }
 
     function answerBot() {
